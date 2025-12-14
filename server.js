@@ -159,17 +159,17 @@ app.post("/api/post-now", async (req, res) => {
 app.post("/api/skip-post", async (req, res) => {
   try {
     const { postId } = req.body;
-    const scheduled = bot.config.scheduledPosts.find(
-      (sp) => sp.postId === postId
+    
+    // Remove from scheduled posts array
+    bot.config.scheduledPosts = bot.config.scheduledPosts.filter(
+      (sp) => sp.postId !== postId
     );
-
-    if (scheduled) {
-      scheduled.status = "skipped";
-      await bot.saveConfig();
-      res.json({ success: true });
-    } else {
-      res.status(404).json({ error: "Scheduled post not found" });
-    }
+    
+    // Save to config and Supabase
+    await bot.saveConfig();
+    await bot.saveScheduledPosts();
+    
+    res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import TwitterBot from "./bot.js";
+import TwitterBot from "./bot-supabase.js";
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -297,11 +297,12 @@ app.post("/api/reschedule", async (req, res) => {
 const SELF_PING_INTERVAL = 14 * 60 * 1000; // 14 minutes
 
 function startSelfPing() {
-  const baseUrl = process.env.RENDER_EXTERNAL_URL || 
-                  process.env.RAILWAY_STATIC_URL ||
-                  process.env.APP_URL ||
-                  `http://localhost:${PORT}`;
-  
+  const baseUrl =
+    process.env.RENDER_EXTERNAL_URL ||
+    process.env.RAILWAY_STATIC_URL ||
+    process.env.APP_URL ||
+    `http://localhost:${PORT}`;
+
   setInterval(async () => {
     try {
       const url = `${baseUrl}/ping`;
@@ -312,14 +313,14 @@ function startSelfPing() {
       console.error("✗ Self-ping failed:", error.message);
     }
   }, SELF_PING_INTERVAL);
-  
+
   console.log(`⏰ Self-ping enabled: pinging every 14 minutes`);
 }
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Dashboard: http://localhost:${PORT}`);
-  
+
   // Start self-ping after server is running
   setTimeout(startSelfPing, 5000); // Wait 5 seconds before first ping
 });

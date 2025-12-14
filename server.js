@@ -123,8 +123,12 @@ app.post("/api/config", async (req, res) => {
 
     await bot.saveConfig();
 
-    // Smart recalculation: reschedule if bot is active
+    // Smart recalculation: reschedule if bot is active (without duplicates)
     if (bot.config.isActive) {
+      // Clear existing scheduled posts first to prevent duplicates
+      bot.config.scheduledPosts = [];
+      await bot.saveScheduledPosts();
+      // Then reschedule fresh
       await bot.schedulePostsForToday();
     }
 
@@ -159,16 +163,26 @@ app.post("/api/post-now", async (req, res) => {
 app.post("/api/skip-post", async (req, res) => {
   try {
     const { postId } = req.body;
-    
+
+    // Find the post and mark it as posted
+    const post = bot.posts.find((p) => p.id === postId);
+    if (post) {
+      await bot.updatePost(postId, {
+        posted: true,
+        posted_at: new Date().toISOString(),
+        tweet_id: null, // No tweet ID since we skipped it
+      });
+    }
+
     // Remove from scheduled posts array
     bot.config.scheduledPosts = bot.config.scheduledPosts.filter(
       (sp) => sp.postId !== postId
     );
-    
+
     // Save to config and Supabase
     await bot.saveConfig();
     await bot.saveScheduledPosts();
-    
+
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });

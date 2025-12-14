@@ -95,19 +95,25 @@ class TwitterBot {
       if (data) {
         this.configId = data.id;
         this.config = {
-          isActive: data.is_active,
-          minPostsPerDay: data.min_posts_per_day,
-          maxPostsPerDay: data.max_posts_per_day,
-          startTime: data.start_time,
-          endTime: data.end_time,
-          postsToday: data.posts_today,
-          lastPostDate: data.last_post_date,
-          startedAt: data.started_at,
+          isActive: data.is_active || false,
+          minPostsPerDay: data.min_posts_per_day || 7,
+          maxPostsPerDay: data.max_posts_per_day || 15,
+          startTime: data.start_time || "08:00",
+          endTime: data.end_time || "22:00",
+          postsToday: data.posts_today || 0,
+          lastPostDate: data.last_post_date || null,
+          startedAt: data.started_at || null,
           scheduledPosts: [],
         };
 
         // Load scheduled posts
         await this.loadScheduledPosts();
+        console.log(
+          `✓ Loaded config: ${this.config.minPostsPerDay}-${this.config.maxPostsPerDay} posts, ${this.config.startTime}-${this.config.endTime}`
+        );
+      } else {
+        // Create default config if it doesn't exist
+        await this.saveConfig();
       }
     } catch (error) {
       console.error("✗ Error loading config:", error);

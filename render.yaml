@@ -1,0 +1,12 @@
+# This file tells Render how to build and run your app
+# You don't need to change anything here
+
+services:
+  - type: web
+    name: twitter-bot
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Twitter Bot Dashboard</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <!-- Authentication Screen -->
+        <div id="authScreen" class="auth-screen">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h1>🤖 Icekidsmart Bot</h1>
+                    <p>Admin Dashboard</p>
+                </div>
+                <form id="authForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="passcode">ENTER PASSCODE</label>
+                        <input
+                            type="password"
+                            id="passcode"
+                            name="passcode"
+                            placeholder="Enter passcode..."
+                            required>
+                    </div>
+                    <div id="authFeedback" class="auth-feedback"></div>
+                    <button type="submit" class="btn btn-primary btn-full">
+                        <span id="authButtonText">Sign In</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div id="dashboard" class="dashboard" style="display: none;">
+            <header class="header">
+                <div class="header-content">
+                    <h1> Welcome</h1>
+                    <button id="signOutBtn" class="btn btn-secondary">Sign
+                        Out</button>
+                </div>
+            </header>
+
+            <main class="main-content">
+                <!-- Status Section -->
+                <section class="status-section">
+                    <div class="status-header">
+                        <div class="status-info">
+                            <h2>Bot Status</h2>
+                            <div class="status-badge" id="statusBadge">
+                                <span class="status-dot"></span>
+                                <span id="botStatus">Inactive</span>
+                            </div>
+                        </div>
+                        <div class="control-buttons">
+                            <button id="startBtn" class="btn btn-success"
+                                style="display: none;">
+                                <span class="btn-icon">▶️</span>
+                                Start Bot
+                            </button>
+                            <button id="stopBtn" class="btn btn-danger"
+                                style="display: none;">
+                                <span class="btn-icon">⏸️</span>
+                                Stop Bot
+                            </button>
+                        </div>
+                    </div>
+                    <div class="status-grid">
+                        <div class="status-item" id="nextPostItem"
+                            style="display: none;">
+                            <div class="status-label">Next Post</div>
+                            <div id="nextPost" class="status-value">-</div>
+                        </div>
+                        <div class="status-item" id="countdownItem"
+                            style="display: none;">
+                            <div class="status-label">Countdown</div>
+                            <div id="countdown" class="status-value">-</div>
+                        </div>
+                        <div class="status-item" id="uptimeItem"
+                            style="display: none;">
+                            <div class="status-label">Uptime</div>
+                            <div id="uptime" class="status-value">-</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Stats Section -->
+                <section class="stats-section">
+                    <div class="stats-grid">
+                        <div class="stat-card stat-total">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Total Posts</div>
+                                <div id="totalPosts" class="stat-value">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-posted">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Posted</div>
+                                <div id="postedPosts" class="stat-value">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-today">
+                            <div class="stat-icon">📅</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Today</div>
+                                <div id="todayPosts" class="stat-value">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-scheduled">
+                            <div class="stat-icon">⏰</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Scheduled</div>
+                                <div id="scheduledPosts"
+                                    class="stat-value">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Configuration Section -->
+                <section class="config-section">
+                    <div class="section-header">
+                        <h2>Bot Configuration</h2>
+                    </div>
+                    <form id="configForm" class="config-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="minPosts">MIN POSTS/DAY</label>
+                                <input type="number" id="minPosts"
+                                    name="minPosts" min="1" max="17" value="7"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="maxPosts">MAX POSTS/DAY</label>
+                                <input type="number" id="maxPosts"
+                                    name="maxPosts" min="1" max="17" value="15"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="form-divider"></div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startTime">START TIME</label>
+                                <input type="time" id="startTime"
+                                    name="startTime" value="08:00" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="endTime">END TIME</label>
+                                <input type="time" id="endTime" name="endTime"
+                                    value="22:00" required>
+                            </div>
+                        </div>
+                        <button type="submit"
+                            class="btn btn-primary btn-full">Save
+                            Configuration</button>
+                    </form>
+                </section>
+
+                <!-- Scheduled Posts Section -->
+                <section class="scheduled-section">
+                    <div class="section-header">
+                        <h2>Scheduled Posts</h2>
+                        <span id="scheduledCount" class="count-badge">0</span>
+                    </div>
+                    <div id="scheduledList" class="scheduled-list">
+                        <div class="empty-state">No posts scheduled</div>
+                    </div>
+                </section>
+
+                <!-- Quick Actions Section -->
+                <section class="actions-section">
+                    <div class="section-header">
+                        <h2>Quick Actions</h2>
+                    </div>
+                    <div class="actions-row">
+                        <button id="addPostsBtn" class="btn btn-primary">
+                            <span class="btn-icon">➕</span>
+                            Add Posts
+                        </button>
+                        <button id="viewPostsBtn" class="btn btn-primary">
+                            <span class="btn-icon">👁️</span>
+                            View Posts
+                        </button>
+                        <button id="downloadBtn" class="btn btn-primary">
+                            <span class="btn-icon">💾</span>
+                            Download Data
+                        </button>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Add Posts Modal -->
+        <div id="addPostsModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add New Posts</h2>
+                    <button class="close-btn"
+                        onclick="closeAddPostsModal()">&times;</button>
+                </div>
+                <form id="addPostsForm" class="modal-form">
+                    <div class="form-group">
+                        <label for="newPosts">POSTS (JSON FORMAT)</label>
+                        <textarea
+                            id="newPosts"
+                            name="newPosts"
+                            rows="10"
+                            placeholder='[{"content": "Your tweet text", "media": []}]'
+                            required></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="closeAddPostsModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add
+                            Posts</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- View Posts Modal -->
+        <div id="viewPostsModal" class="modal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h2>All Posts</h2>
+                    <button class="close-btn"
+                        onclick="closeViewPostsModal()">&times;</button>
+                </div>
+                <div id="postsList" class="posts-list">
+                    <div class="loading">Loading posts...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Time Modal -->
+        <div id="editTimeModal" class="modal">
+            <div class="modal-content modal-small">
+                <div class="modal-header">
+                    <h2>Edit Post Time</h2>
+                    <button class="close-btn"
+                        onclick="closeEditTimeModal()">&times;</button>
+                </div>
+                <form id="editTimeForm" class="modal-form">
+                    <input type="hidden" id="editPostId" name="postId">
+                    <div class="form-group">
+                        <label for="editPostTime">SCHEDULED TIME</label>
+                        <input type="datetime-local" id="editPostTime"
+                            name="time" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="closeEditTimeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Update
+                            Time</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lightbox Modal -->
+        <div id="lightbox" class="lightbox">
+            <button class="lightbox-close"
+                onclick="closeLightbox()">&times;</button>
+            <div class="lightbox-content">
+                <img id="lightboxImage" src alt="Media">
+                <video id="lightboxVideo" controls
+                    style="display: none;"></video>
+            </div>
+        </div>
+
+        <script src="app.js"></script>
+    </body>
+</html>

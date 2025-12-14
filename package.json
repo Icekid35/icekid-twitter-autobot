@@ -1,0 +1,21 @@
+{
+  "name": "twitter-bot-dashboard",
+  "version": "1.0.0",
+  "description": "Automated Twitter Bot with Admin Dashboard",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "scrape": "node scraper_v2.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.87.1",
+    "axios": "^1.6.2",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "twitter-api-v2": "^1.28.0",
+    "xml2js": "^0.6.2"
+  }
+}

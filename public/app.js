@@ -478,8 +478,8 @@ async function postNow(postId) {
 
     if (response.ok) {
       showToast("Post published successfully");
-      updateStats();
-      updateScheduled();
+      await updateStats();
+      await updateScheduled();
     }
   } catch (error) {
     console.error("Error posting now:", error);
@@ -500,8 +500,8 @@ async function skipPost(postId) {
 
     if (response.ok) {
       showToast("Post skipped successfully");
-      updateStats();
-      updateScheduled();
+      await updateStats();
+      await updateScheduled();
     }
   } catch (error) {
     console.error("Error skipping post:", error);

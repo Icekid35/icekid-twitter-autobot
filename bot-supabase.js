@@ -17,10 +17,10 @@ class TwitterBot {
     this.posts = [];
     this.config = {
       isActive: false,
-      minPostsPerDay: 7,
-      maxPostsPerDay: 15,
+      minPostsPerDay: 1,
+      maxPostsPerDay: 10,
       startTime: "08:00",
-      endTime: "22:00",
+      endTime: "19:00",
       postsToday: 0,
       lastPostDate: null,
       scheduledPosts: [],
@@ -96,10 +96,10 @@ class TwitterBot {
         this.configId = data.id;
         this.config = {
           isActive: data.is_active || false,
-          minPostsPerDay: data.min_posts_per_day || 7,
-          maxPostsPerDay: data.max_posts_per_day || 15,
+          minPostsPerDay: data.min_posts_per_day || 1,
+          maxPostsPerDay: data.max_posts_per_day || 10,
           startTime: data.start_time || "08:00",
-          endTime: data.end_time || "22:00",
+          endTime: data.end_time || "19:00",
           postsToday: data.posts_today || 0,
           lastPostDate: data.last_post_date || null,
           startedAt: data.started_at || null,
@@ -348,11 +348,26 @@ class TwitterBot {
     if (now > startTime) startTime.setTime(now.getTime() + 60000);
 
     const times = [];
-    const range = endTime - startTime;
+    const totalDuration = endTime - startTime;
+    
+    // Evenly distribute posts across the timeframe
+    const interval = totalDuration / count;
 
     for (let i = 0; i < count; i++) {
-      const randomTime = new Date(startTime.getTime() + Math.random() * range);
-      times.push(randomTime);
+      // Calculate even distribution time
+      const evenTime = startTime.getTime() + (interval * (i + 0.5));
+      
+      // Add random offset of ±10 minutes (±600000 ms)
+      const randomOffset = (Math.random() * 20 - 10) * 60000;
+      const scheduledTime = new Date(evenTime + randomOffset);
+      
+      // Ensure time doesn't go before start or after end
+      const clampedTime = new Date(Math.max(
+        startTime.getTime(),
+        Math.min(scheduledTime.getTime(), endTime.getTime())
+      ));
+      
+      times.push(clampedTime);
     }
 
     return times.sort((a, b) => a - b);
